@@ -14,11 +14,6 @@ const users = [];
 function checksExistsUserAccount(request, response, next) {
   const {username} = request.headers;
 
-  if(!username){
-    return response.status(404).json({
-      error:"user not exists"
-    })
-  }
   const user = users.find((user)=> user.username === username);
 
   if(!user){
@@ -48,7 +43,7 @@ app.post('/users', (request, response) => {
         todos: []
       };
   users.push(user);
-  return response.status(200).json(users);
+  return response.status(201).json(user);
   
 });
 
@@ -114,14 +109,14 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
 
   const todoIndex = user.todos.findIndex(todo => todo.id === id);
 
-  if(todoIndex){
+  if(todoIndex === -1){
     return response.status(404).json({
       error: 'message'
     })
   }
 
   user.todos.splice(todoIndex, 1);
-  return response.status(204);
+  return response.status(204).json();
 });
 
 module.exports = app;
